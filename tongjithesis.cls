@@ -29,6 +29,7 @@
   \tongji@authoryearfalse
   \expandafter\csname tongji@#1true\endcsname}
 
+
 % 学术型|专业型|同等学力
 \newif\iftongji@academic
 \tongji@academictrue % 默认为学术型
@@ -78,22 +79,22 @@
 
 % 解析用户传递过来的选项，并加载 \pkg{ctexbook}。
 % 强制指定一个degree选项。
-\ProcessKeyvalOptions*
-  \iftongji@master\relax\else
-    \iftongji@doctor\relax\else
-        \ClassError{tongjithesis}%
-                   {Please specify thesis degree in option: \MessageBreak
-                    degree=[master | doctor]}{}      
-    \fi
-  \fi
+%\ProcessKeyvalOptions*
+%  \iftongji@master\relax\else
+%    \iftongji@doctor\relax\else
+%        \ClassError{tongjithesis}%
+%                   {Please specify thesis degree in option: \MessageBreak
+%                    degree=[master | doctor]}{}      
+%    \fi
+%  \fi
 % 杜绝非法的degreetype选项。
-\iftongji@academic\relax\else
-  \iftongji@profession\relax\else
-    \iftongji@equaleducation\relax\else
-        \ClassError{tongjithesis}{Unknown degree type option.\MessageBreak Please check your degree type option, good luck!}{}  
-    \fi
-  \fi
-\fi
+%\iftongji@academic\relax\else
+%  \iftongji@profession\relax\else
+%    \iftongji@equaleducation\relax\else
+%        \ClassError{tongjithesis}{Unknown degree type option.\MessageBreak Please check your degree type option, good luck!}{}  
+%    \fi
+%  \fi
+%\fi
 % 杜绝非法的bibtype选项。
 \iftongji@numeric\relax\else
   \iftongji@authoryear\relax\else    
@@ -622,6 +623,7 @@
 % 论文中英文题目
 \tongji@def@term{ctitle}
 \tongji@def@term{cheadingtitle}
+\tongji@def@term{capply}
 \tongji@def@term{etitle}
 % 作者、导师、副导师（校外）老师。
 \tongji@def@term{cauthor}
@@ -631,8 +633,8 @@
 \tongji@def@term{esupervisor}
 \tongji@def@term{eassosupervisor}
 % 学位中英文
-\tongji@def@term{cdegree}
-\tongji@def@term{edegree}
+%\tongji@def@term{cdegree}
+%\tongji@def@term{edegree}
 % 院系中英文名称。
 \tongji@def@term{cdepartment}
 \tongji@def@term{edepartment}
@@ -698,7 +700,7 @@
     { 
       % \renewcommand{\baselinestretch}{1} %单倍行距
       \begin{center}
-            \erhao[1]{{\bfseries\lishu\tongji@capply}}
+            \erhao[1]{{\bfseries\lishu \tongji@capply}}
             \iftongji@academic{\par\vskip 1.8cm}
             \else \iftongji@profession{\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu（专业学位）}} \par\vskip 0.9cm}
                     \else \iftongji@equaleducation {\par\vskip 0.4cm \sihao[1]{{\bfseries\lishu（同等学力）}} \par\vskip 0.9cm}                        
@@ -765,8 +767,10 @@
             & \tongji@studentnumber\\
             \tongji@put@title{\tongji@cdepartmenttitle}    & \tongji@title@sep 
             & \tongji@cdepartment\\
-            \tongji@put@title{\tongji@cmajorfirsttitle}    & \tongji@title@sep
-            & \tongji@cmajorfirst\\
+            \ifx\tongji@cmajorfirst\@empty\else
+                \tongji@put@title{\tongji@cmajorfirsttitle} & \tongji@title@sep
+                & \tongji@cmajorfirst\\
+            \fi
             \tongji@put@title{\tongji@cmajorsecondtitle}   & \tongji@title@sep
             & \tongji@cmajorsecond\\
             \tongji@put@title{\tongji@csupervisortitle}    & \tongji@title@sep 
@@ -908,7 +912,7 @@
 \tongji@parse@keywords{ckeywords}
 \tongji@parse@keywords{ekeywords}
 \newcommand{\tongji@makeabstract}{%
-  \cleardoublepage % always openright for Abstract
+  %\cleardoublepage % always openright for Abstract
   \tongji@chapter*[]{\cabstractname}[\wuhao\songti\tongji@schoolname~\tongji@capply~\cabstractname] % no tocline
   \pagenumbering{Roman}
   \tongji@cabstract
@@ -917,12 +921,14 @@
   \noindent\hangindent\wd0\hangafter1
     \box0\tongji@ckeywords
   % \cleardoublepage % always openright for Abstract  
-  \tongji@chapter*[]{\eabstractname}[\wuhao\tongji@eschoolname~\tongji@edegree~\eabstractname] % no tocline
-  \tongji@eabstract
-  \vskip12bp
-  \setbox0=\hbox{{\bfseries Key Words:\enskip}}
-  \noindent\hangindent\wd0\hangafter1
-    \box0\tongji@ekeywords}
+  %\tongji@chapter*[]{\eabstractname}[\wuhao\tongji@eschoolname~\tongji@edegree~\eabstractname] % no tocline
+  %\tongji@eabstract
+  %\vskip12bp
+  %\setbox0=\hbox{{\bfseries Key Words:\enskip}}
+  %\noindent\hangindent\wd0\hangafter1
+   % \box0\tongji@ekeywords
+    
+}
 
 
 % 生成封面总命令。
@@ -930,17 +936,9 @@
   \phantomsection
   \pdfbookmark[-1]{\tongji@ctitle}{ctitle}
   \normalsize%
-  \begin{titlepage}
-    \tongji@first@titlepage
-    \cleardoublepage
-    \engcover
-    \cleardoublepage
-    \tongji@authorization@mk
-    \cleardoublepage
-    \tongji@declareshortname@mk
-  \end{titlepage}
+   \tongji@first@titlepage
   \normalsize
-  \tongji@makeabstract
+ \tongji@makeabstract
   \let\@tabular\tongji@tabular}
    
 % 主要符号对照表  
